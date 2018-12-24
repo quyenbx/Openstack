@@ -44,7 +44,7 @@ Sử dụng 03 NICs đối với các máy: Controller1, Compute1, Compute2. Cá
 ## 2. Các Bước Cài Đặt:
 ### 2.1. Setup Trên Controller:
 - Setup môi trường
-'''sh
+```sh
 hostnamectl set-hostname controller
 echo "Setup IP  ens160"
 nmcli c modify ens160 ipv4.addresses 10.10.10.45/24
@@ -73,6 +73,6 @@ sudo systemctl start network
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 init 6
-'''
+```
 
 
