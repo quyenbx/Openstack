@@ -353,7 +353,11 @@ openstack security group rule create --proto udp --dst-port 1:65535 default
 
 ![](./images/taomayao/4.png)
 
+- Trong tab Configuration nhập đoạn mã đề truyền password
 
+![](./images/taomayao/5.png)
+
+Chờ máy máy khởi tạo và thưc hiện ping, ssh để kiểm tra với IP được cấp trên dashboad
 
 
 
