@@ -22,4 +22,5 @@ Lưu ý: Trong tài liệu này chỉ thực hiện cài đặt OpenStack, bư�
 - Tự động hóa các bước cài đặt và lựa chọn thành phần cài đặt.
 
 Nhanh chóng dựng được môi trường OpenStack để sử dụng làm PoC nội bộ, demo khách hàng, test tính năng.
+
 **Nhược điểm 1** : Đóng kín các bước cài đối với người mới.
