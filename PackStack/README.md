@@ -16,7 +16,7 @@
 ## 1. Các Bước Chuẩn Bị:
 ### 1.1. Giới thiệu:
 Lưu ý: Trong tài liệu này chỉ thực hiện cài đặt OpenStack, bước cài đặt CEPH ở tài liệu khác.
-       - Packstack là một công cụ cài đặt OpenStack nhanh chóng.
-	   - Packstack được phát triển bởi redhat
-	   - Chỉ hỗ trợ các distro: RHEL, Centos
-	   - Tự động hóa các bước cài đặt và lựa chọn thành phần cài đặt.
+- Packstack là một công cụ cài đặt OpenStack nhanh chóng.
+- Packstack được phát triển bởi redhat
+- Chỉ hỗ trợ các distro: RHEL, Centos
+- Tự động hóa các bước cài đặt và lựa chọn thành phần cài đặt.
