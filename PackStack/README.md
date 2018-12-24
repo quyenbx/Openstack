@@ -1,6 +1,6 @@
 # MUC LUC
 # 1. Chuẩn bị:
-## 1.1. Giới thiệu:
+### 1.1. Giới thiệu:
 ## 1.2. Môi trường thực hiện:
 ## 1.3. Mô Hình:
 ## 1.4. IP Planning:
