@@ -39,5 +39,39 @@ Sử dụng 03 NICs đối với các máy: Controller1, Compute1, Compute2. Cá
 
 ### 1.3. Mô Hình:
 <img src="https://imgur.com/a/BGXcAnn">
+### 1.4. IP Planning:
+## 2. Các Bước Cài Đặt:
+### 2.1. Setup Trên Controller:
+- Setup môi trường
+'''sh
+hostnamectl set-hostname controller
+echo "Setup IP  ens160"
+nmcli c modify ens160 ipv4.addresses 10.10.10.45/24
+nmcli c modify ens160 ipv4.gateway 10.10.10..1
+nmcli c modify ens160 ipv4.dns 8.8.8.8
+nmcli c modify ens160 ipv4.method manual
+nmcli con mod ens160 connection.autoconnect yes
+ 
+echo "Setup IP  ens192"
+nmcli c modify ens192 ipv4.addresses 10.10.11.45/24
+nmcli c modify ens192 ipv4.method manual
+nmcli con mod ens192 connection.autoconnect yes
+ 
+echo "Setup IP  ens224"
+nmcli c modify ens224 ipv4.addresses 10.10.12.45/24
+nmcli c modify ens224 ipv4.method manual
+nmcli con mod ens224 connection.autoconnect yes
+ 
+sudo systemctl disable firewalld
+sudo systemctl stop firewalld
+sudo systemctl disable NetworkManager
+sudo systemctl stop NetworkManager
+sudo systemctl enable network
+sudo systemctl start network
+ 
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+init 6
+'''
 
 
