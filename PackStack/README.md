@@ -249,8 +249,9 @@ init 6
 - Sau khi cài đặt hoàn tất, trên màn hình sẽ xuất hiên thông báo về các kết quả cài đặt cùng với link truy cập và các tài khoản.
 - Truy cập vào web theo địa chỉ http://10.10.10.206/dashboard
 
- - Tài khoản : admin
- - Mật khẩu : Welcome123
+  - Tài khoản : admin
+  
+  - Mật khẩu : Welcome123
 
 
 
