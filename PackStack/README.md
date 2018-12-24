@@ -268,6 +268,8 @@ openstack compute service list
 
 Nếu state là **UP** thì có thể tiếp tục các bước dưới
 
+![](./images/service_compute.png)
+
 - Kiểm tra trạng thái của dịch vụ neutron bằng lệnh 
 ```sh
 openstack network agent list
@@ -275,6 +277,7 @@ openstack network agent list
 
 Nếu các trạng thái của các service trong neutron đều là **UP** và giá trị **Alive** đều là **True** thì quá trình cài đặt neutron đã thành công
 
+![](./images/network.png)
 - Upload images
 
 ```sh
