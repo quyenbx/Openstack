@@ -38,7 +38,7 @@ Sử dụng 03 NICs đối với các máy: Controller1, Compute1, Compute2. Cá
 - **NIC3** - ens34: Là dải mạng Provider mà các máy ảo sẽ giao tiếp với bên ngoài.
 
 ### 1.3. Mô Hình:
-![](./images/sodoketnoi.png)
+![](./images/sodoketnoi.png.)
 ### 1.4. IP Planning:
 ![](./images/IP_Planning.png)
 ## 2. Các Bước Cài Đặt:
