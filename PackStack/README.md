@@ -24,3 +24,19 @@ Lưu ý: Trong tài liệu này chỉ thực hiện cài đặt OpenStack, bư�
 Nhanh chóng dựng được môi trường OpenStack để sử dụng làm PoC nội bộ, demo khách hàng, test tính năng.
 
 **Nhược điểm 1** : Đóng kín các bước cài đối với người mới.
+**Nhược điểm 2** : Khó bug các lỗi khi cài vì đã được đóng gói cùng với các tool cài đặt tự động (puppet)
+
+### 1.2. Môi Trường Thực Hiện:
+Sử dụng VMWare ESXI để tạo các máy cài đặt OpenStack
+- Distro: CentOS 7.6.1810
+- OpenStack Queens
+
+Sử dụng 03 NICs đối với các máy: Controller1, Compute1, Compute2. Các dải mạng đều là VLAN được tạo từ VMWARE ESXi
+- **NIC1** - ens32: là dải mạng sử dụng cho các traffic MGNT + API + Horizon
+- **NIC2** - ens33: Là dải mạng DATA VM mà các máy ảo sẽ truyền thông với nhau (giữa máy ảo với máy ảo).
+- **NIC3** - ens34: Là dải mạng Provider mà các máy ảo sẽ giao tiếp với bên ngoài.
+
+### 1.3. Mô Hình:
+<img src="https://imgur.com/a/BGXcAnn">
+
+
