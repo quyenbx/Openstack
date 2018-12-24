@@ -333,6 +333,27 @@ openstack security group rule create --proto udp --dst-port 1:65535 default
 
 **Lưu Ý:** Trên thực tế, người quản trị chỉ nên mở những rule cần thiết và tránh mở full port như câu lệnh bên trên
 
+## 2.6.Sử dụng dashboad
+**Tạo máy ảo**
+- Đăng nhập vào dashboad và thưc hiện theo bước sau
+- Click vào tab Instances và chọn Launch Instance
+- Trong tab **Details**, nhập tên máy ảo
+
+![](./images/taomayao/1.png)
+
+- Trong tab **Source** chọn images cho máy ảo.
+
+![](./images/taomayao/2.png)
+
+- Trong tab `Flavor` chọn kích thước của máy ảo.
+
+![](./images/taomayao/3.png)
+
+- Trong tab `Network` chọn dải mạng mà máy ảo sẽ gắn vào. Trong ví dụ này chọn dải external, nếu chọn dải private thì cần thực hiện bước floating IP.
+
+![](./images/taomayao/4.png)
+
+
 
 
 
