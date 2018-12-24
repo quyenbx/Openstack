@@ -11,4 +11,3 @@
 ### 2.4. Thực hiện cài đặt trên Controller:
 ### 2.5. Kiểm tra hệ thống sau khi cài đặt:
 ### 2.6. Sử dụng Dashboad:
-# ------------------------------------------------------------------
