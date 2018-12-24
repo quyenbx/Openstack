@@ -24,6 +24,7 @@ Lưu ý: Trong tài liệu này chỉ thực hiện cài đặt OpenStack, bư�
 Nhanh chóng dựng được môi trường OpenStack để sử dụng làm PoC nội bộ, demo khách hàng, test tính năng.
 
 **Nhược điểm 1** : Đóng kín các bước cài đối với người mới.
+
 **Nhược điểm 2** : Khó bug các lỗi khi cài vì đã được đóng gói cùng với các tool cài đặt tự động (puppet)
 
 ### 1.2. Môi Trường Thực Hiện:
