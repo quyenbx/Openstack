@@ -11,4 +11,8 @@
 ### 2.4. Thực hiện cài đặt trên Controller:
 ### 2.5. Kiểm tra hệ thống sau khi cài đặt:
 ### 2.6. Sử dụng Dashboad:
-#===========================================
+===========================================
+
+## 1. Các Bước Chuẩn Bị:
+### 1.1. Giới thiệu:
+Lưu ý: Trong tài liệu này chỉ thực hiện cài đặt OpenStack, bước cài đặt CEPH ở tài liệu khác.
