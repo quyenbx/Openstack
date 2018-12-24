@@ -40,6 +40,7 @@ Sử dụng 03 NICs đối với các máy: Controller1, Compute1, Compute2. Cá
 ### 1.3. Mô Hình:
 ![](./images/sodoketnoi.png)
 ### 1.4. IP Planning:
+![](./images/IP_Planning.png)
 ## 2. Các Bước Cài Đặt:
 ### 2.1. Setup Trên Controller:
 - Setup môi trường
