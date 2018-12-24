@@ -252,6 +252,91 @@ init 6
   - Tài khoản : admin
   
   - Mật khẩu : Welcome123
+  
+### 2.5. Kiểm Tra Hệ Thống Sau Khi Cài Đặt:
+- Thực hiện lệnh dưới để khai báo biến môi trường mỗi khi đăng nhập phiên mới vào máy chủ
+
+```sh
+source /root/keystonerc_admin
+```
+
+- Kiểm tra trạng thái của các service Nova bằng lệnh
+
+```sh
+openstack compute service list
+```
+
+Nếu state là **UP** thì có thể tiếp tục các bước dưới
+
+- Kiểm tra trạng thái của dịch vụ neutron bằng lệnh 
+```sh
+openstack network agent list
+```
+
+Nếu các trạng thái của các service trong neutron đều là **UP** và giá trị **Alive** đều là **True** thì quá trình cài đặt neutron đã thành công
+
+- Upload images
+
+```sh
+curl http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img | glance \
+  image-create --name='cirros' \
+  --visibility=public \
+  --container-format=bare \
+  --disk-format=qcow2
+```
+
+- Tạo network public
+```sh
+neutron net-create external_network --provider:network_type flat \
+  --provider:physical_network extnet  \
+  --router:external \
+  --shared
+```
+
+- Tạo subnet trong network public
+
+```sh
+neutron subnet-create --name public_subnet \
+  --enable_dhcp=True --dns-nameserver 8.8.8.8 \
+  --allocation-pool=start=10.10.11.216,end=10.10.11.220 \
+  --gateway=10.10.11.1 external_network 10.10.11.0/24
+```
+
+- Tạo network private
+
+```sh
+openstack network create private_network
+neutron subnet-create --name private_subnet private_network 10.10.5.0/24 --dns-nameserver 8.8.8.8
+```
+
+- Tạo router tên là `Vrouter` và add các network vừa tạo ở trên vào router đó
+
+```sh
+openstack router create Vrouter
+ neutron router-gateway-set Vrouter external_network
+ neutron router-interface-add Vrouter private_subnet
+```
+- Kiểm tra IP của router vừa được gán interface bằng lệnh:
+```sh
+openstack port list --router Vrouter
+```
+
+- Mở các rule
+```sh
+openstack security group rule create --proto icmp default
+openstack security group rule create --proto tcp --dst-port 1:65535 default
+openstack security group rule create --proto udp --dst-port 1:65535 default
+```
+
+**Lưu Ý:** Trên thực tế, người quản trị chỉ nên mở những rule cần thiết và tránh mở full port như câu lệnh bên trên
+
+
+
+
+
+
+
+
 
 
 
