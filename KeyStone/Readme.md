@@ -1,9 +1,10 @@
 ## Muc Luc
 ### 1. Khái niệm KeyStone 
 ### 2. Các thành phần trong KeyStone
-### 3. KeyStone Workflow
-### 4. KeyStone User Management
-### 5. KeyStone Service Management
+### 3. Các định dạng của Tokens
+### 4. KeyStone Workflow
+### 5. KeyStone User Management
+### 6. KeyStone Service Management
 
 ============================================================================
 
@@ -43,20 +44,27 @@ Mỗi dịch vụ lại được cấu hình để sử dụng một backend cho
 - LDAP Backend: LDAP là hệ thống lưu trữ các user và project trong các subtree tách biệt nhau.
 - Multiple Backend: sử dụng kết hợp nhiều hệ thống Backend, trong đó SQL lưu trữ các service account (tài khoản của các dịch vụ như: nova glance, etc.), còn LDAP sử dụng lưu trữ thông tin người dùng, etc.
 
-### 3. KeyStone Workflow
+### 3. Các định dạng của Tokens
+- Token có các định dạng sau
+  - UUID
+  - PKI
+  - PKIZ
+  - Fernet
+
+### 4. KeyStone Workflow
 - Sơ đồ tương tác đơn giản giữa người dùng và các service trong openstack
 
 ![](./images/user-service.png)
 
 ![](./images/user-service1.png)
 
-### 4. KeyStone User Management
+### 5. KeyStone User Management
 Keystone quản lý các user, project(tenants), roles, chịu trách nhiệm xác thực và ấn định quyền truy cập các tài nguyên trong hệ thống. Có ba khái niệm chính trong tính năng User Management:
 - User: là tải khoản của người sử dụng dịch vụ, bao gồm một số thông tin như: username, password, email
 - Project(tenant): khái niệm liên quan tới việc gộp, cô lập các nguồn tài nguyên. Tự các project không hề có user. Người dùng được gán roles đối với mỗi project, quy định quyền truy cập tài nguyên trong project.
 - Roles: chỉ định các thao tác vận hành hệ thống được phép thực hiện, tài nguyên mà người dùng được phép sử dụng.
 
-### 5. KeyStone Service Management
+### 6. KeyStone Service Management
 Keystone cũng cung cấp danh mục các dịch vụ cùng với các API endpoints để truy cập các dịch vụ đó. Có hai khái niệm chính trong tính năng "service management":
 - Services: các dịch vụ khác trong OpenStack sẽ có tài khoản tương ứng (thường có có tên tài khoản trùng code name của dịch vụ như nova, glance, etc.). Các tài khoản này thuộc domain đặc biệt tên là service.
 - Endpoints: điểm đầu mối để truy cập các dịch vụ, thể hiện bằng URL để truy cập các dịch vụ đó.
