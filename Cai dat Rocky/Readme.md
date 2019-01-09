@@ -497,7 +497,268 @@ openstack image create "cirros" --file cirros-0.4.0-x86_64-disk.img --disk-forma
 openstack image list
 ```
 
+## 6. Cài đặt Compute service - Nova
+### 6.1. Cài đặt trên node controller
+- Chuẩn bị
 
+  - Tạo database
+  ```sh
+  mysql -u root -p
+  ```
+  
+  ```sh
+  CREATE DATABASE nova_api;
+  CREATE DATABASE nova;
+  CREATE DATABASE nova_cell0;
+  CREATE DATABASE placement;
+  GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+  GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+  GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+  GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+  GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+  GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+  GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'localhost' IDENTIFIED BY 'PLACEMENT_DBPASS';
+  GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'%' IDENTIFIED BY 'PLACEMENT_DBPASS';
+  FLUSH PRIVILEGES;
+  quit;
+  ```
+  Note: Thay thế NOVA_DBPASS và PLACEMENT_DBPASS với pass tương ứng
+  
+- Thao tác với quyền admin
+
+```sh
+source /root/admin-openrc
+```
+  - Tạo user Nova
+  ```sh
+  openstack user create --domain default --password-prompt nova
+  ```
+  
+  - Cấp quyền admin cho user nova trong project service
+  ```sh
+  openstack role add --project service --user nova admin
+  ```
+  
+  - Tạo service Nova
+  ```sh
+  openstack service create --name nova --description "OpenStack Compute" compute
+  ```
+
+- Tạo Compute API service endpoints
+
+```sh
+openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
+openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
+openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
+```
+
+Note: thay đổi controller thành IP manager của node controller
+
+- Tạo user placement
+```sh
+openstack user create --domain default --password-prompt placement
+```
+
+- Gán quyền admin cho user placement trong project service
+```sh
+openstack role add --project service --user placement admin
+```
+
+- Tạo Placement API trong danh mục service
+```sh
+openstack service create --name placement --description "Placement API" placement
+openstack endpoint create --region RegionOne placement public http://controller:8778
+openstack endpoint create --region RegionOne placement internal http://controller:8778
+openstack endpoint create --region RegionOne placement admin http://controller:8778
+```
+
+Note: Thay controller bằng IP manager của node controller
+
+- Cài đặt và cấu hình các thành phần
+  - Cài đặt các packages
+  ```sh
+  yum install openstack-nova-api openstack-nova-conductor openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler openstack-nova-placement-api -y
+  ```
+  
+  - Sửa file cấu hình
+  ```sh
+  cd /etc/nova/
+  mv nova.conf nova.conf.bak
+  cat >> nova.conf << "EOF"
+  [DEFAULT]
+  enabled_apis = osapi_compute,metadata
+  transport_url = rabbit://openstack:RABBIT_PASS@controller
+  my_ip = 10.10.10.206
+  use_neutron = true
+  firewall_driver = nova.virt.firewall.NoopFirewallDriver
+  [api]
+  auth_strategy = keystone
+  [api_database]
+  connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
+  [barbican]
+  [cache]
+  [cells]
+  [cinder]
+  [compute]
+  [conductor]
+  [console]
+  [consoleauth]
+  [cors]
+  [database]
+  connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+  [devices]
+  [ephemeral_storage_encryption]
+  [filter_scheduler]
+  [glance]
+  api_servers = http://controller:9292
+  [guestfs]
+  [healthcheck]
+  [hyperv]
+  [ironic]
+  [key_manager]
+  [keystone]
+  [keystone_authtoken]
+  auth_url = http://controller:5000/v3
+  memcached_servers = controller:11211
+  auth_type = password
+  project_domain_name = default
+  user_domain_name = default
+  project_name = service
+  username = nova
+  password = NOVA_PASS
+  [libvirt]
+  [matchmaker_redis]
+  [metrics]
+  [mks]
+  [neutron]
+  [notifications]
+  [osapi_v21]
+  [oslo_concurrency]
+  lock_path = /var/lib/nova/tmp
+  [oslo_messaging_amqp]
+  [oslo_messaging_kafka]
+  [oslo_messaging_notifications]
+  [oslo_messaging_rabbit]
+  [oslo_messaging_zmq]
+  [oslo_middleware]
+  [oslo_policy]
+  [pci]
+  [placement]
+  region_name = RegionOne
+  project_domain_name = Default
+  project_name = service
+  auth_type = password
+  user_domain_name = Default
+  auth_url = http://controller:5000/v3
+  username = placement
+  password = PLACEMENT_PASS
+  [placement_database]
+  connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement
+  [powervm]
+  [profiler]
+  [quota]
+  [rdp]
+  [remote_debug]
+  [scheduler]
+  [serial_console]
+  [service_user]
+  [spice]
+  [upgrade_levels]
+  [vault]
+  [vendordata_dynamic_auth]
+  [vmware]
+  [vnc]
+  enabled = true
+  server_listen = $my_ip
+  server_proxyclient_address = $my_ip
+  [workarounds]
+  [wsgi]
+  [xenserver]
+  [xvp]
+  [zvm]
+  EOF
+  chmod 640 nova.conf
+  chown root:nova nova.conf
+  ```
+  
+  Note: Controller thay bằng IP manager của node controller, RABBIT_PASS thay bằng pass của rabbit, NOVA_DBPASS thay bằng pass của user nova trong database server, NOVA_PASS thay bằng pass của user nova, PLACEMENT_DBPASS thay bằng pass của user placement, PLACEMENT_DBPASS thay bằng pass của user placement trong database server,my_ip là IP manager của node controller
+  
+  - Cho phép truy cập Placement API bằng cách sửa file 00-nova-placement-api.conf
+  ```sh
+  cd /etc/httpd/conf.d/
+  mv 00-nova-placement-api.conf 00-nova-placement-api.conf.bak
+  cat >> 00-nova-placement-api.conf << "EOF"
+  Listen 8778
+  <VirtualHost *:8778>
+  WSGIProcessGroup nova-placement-api
+  WSGIApplicationGroup %{GLOBAL}
+  WSGIPassAuthorization On
+  WSGIDaemonProcess nova-placement-api processes=3 threads=1 user=nova group=nova
+  WSGIScriptAlias / /usr/bin/nova-placement-api
+  <IfVersion >= 2.4>
+    ErrorLogFormat "%M"
+  </IfVersion>
+  ErrorLog /var/log/nova/nova-placement-api.log
+  #SSLEngine On
+  #SSLCertificateFile ...
+  #SSLCertificateKeyFile ...
+  </VirtualHost>
+  Alias /nova-placement-api /usr/bin/nova-placement-api
+  <Location /nova-placement-api>
+  SetHandler wsgi-script
+  Options +ExecCGI
+  WSGIProcessGroup nova-placement-api
+  WSGIApplicationGroup %{GLOBAL}
+  WSGIPassAuthorization On
+  </Location>
+  <Directory /usr/bin>
+  <IfVersion >= 2.4>
+  Require all granted
+  </IfVersion>
+  <IfVersion < 2.4>
+  Order allow,deny
+  Allow from all
+  </IfVersion>
+  </Directory>
+  EOF
+  chmod 640 00-nova-placement-api.conf
+  systemctl restart httpd
+  ```
+  
+  ```sh
+  su -s /bin/sh -c "nova-manage api_db sync" nova
+  ```
+  
+  - Register cell0 database
+  ```sh
+  su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
+  ```
+  
+  - Tạo cell1 cell
+  ```sh
+  su -s /bin/sh -c "nova-manage cell_v2 create_cell --name=cell1 --verbose" nova 109e1d4b-536a-40d0-83c6-5f121b82b650
+  ```
+  
+  ```sh
+  su -s /bin/sh -c "nova-manage db sync" nova
+  ```
+  
+  - Xác nhận cell0 and cell1 được register hợp lệ
+  ```sh
+  su -s /bin/sh -c "nova-manage cell_v2 list_cells" nova
+  ```
+  
+  ```sh
+  systemctl enable openstack-nova-api.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+  systemctl start openstack-nova-api.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+  ```
+  
+  
+  
+   
+   
+  
+  
 
 
 
