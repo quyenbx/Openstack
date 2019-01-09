@@ -328,6 +328,185 @@ systemctl start httpd.service
   ```
   Note: Thay đổi nội dung ADMIN_PASS với pass tương ứng và controller thay bằng IP manager node controller
   
+## 5. Cài đặt Image Service - Glance
+
+### 5.1 Chuẩn bị
+- Glance được tiến hành cài đặt trên node controller
+- Tạo database
+```sh
+mysql -u root -p
+```
+
+```sh
+CREATE DATABASE glance;
+GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
+GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';
+FLUSH PRIVILEGES;
+quit;
+```
+
+Note: GLANCE_DBPASS là pass của user glance trong database
+
+- Tạo thông tin cho service GLANCE_DBPASS
+
+```sh
+source /root/admin-openrc
+```
+  - Tạo project service
+  ```sh
+  openstack project create --description "service project" service
+  ```
+  
+  - Tạo user glance
+  ```sh
+  openstack user create --domain default --password-prompt glance
+  ```
+
+  - Gán quyền admin cho user glance trong project service
+  ```sh
+  openstack role add --project service --user glance admin
+  ```
+  
+  - Tạo service glance
+  ```sh
+  openstack service create --name glance --description "OpenStack Image" image
+  ```
+  
+- Tạo API endpoint cho image service
+```sh
+openstack endpoint create --region RegionOne image public http://controller:9292
+openstack endpoint create --region RegionOne image internal http://controller:9292
+openstack endpoint create --region RegionOne image admin http://controller:9292
+```
+
+Note: controller là IP manager của node controller
+
+### 5.1 Cài đặt và cấu hình
+- Cài đặt packages
+```sh
+yum install openstack-glance -y
+```
+
+- Sửa file cấu hình glance-api.conf
+
+```sh
+cd /etc/glance/
+mv glance-api.conf glance-api.conf.bak
+cat >> glance-api.conf << "EOF"
+[DEFAULT]
+[cors]
+[database]
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+[glance_store]
+stores = file,http
+default_store = file
+filesystem_store_datadir = /var/lib/glance/images/
+[image_format]
+[keystone_authtoken]
+www_authenticate_uri  = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = glance
+password = GLANCE_PASS
+[matchmaker_redis]
+[oslo_concurrency]
+[oslo_messaging_amqp]
+[oslo_messaging_kafka]
+[oslo_messaging_notifications]
+[oslo_messaging_rabbit]
+[oslo_messaging_zmq]
+[oslo_middleware]
+[oslo_policy]
+[paste_deploy]
+flavor = keystone
+[profiler]
+[store_type_location_strategy]
+[task]
+[taskflow_executor]
+EOF
+chmod 640 glance-api.conf
+chown root:glance glance-api.conf
+```
+
+Note: Với GLANCE_DBPASS là pass của user glance trong database server, controller là IP manager của node controller, GLANCE_PASS là pass của user glance
+
+- Sửa file cấu hình glance-registry.conf
+
+```sh
+cd /etc/glance/
+mv glance-registry.conf glance-registry.conf.bak
+cat >> glance-registry.conf << "EOF"
+[DEFAULT]
+[database]
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+[keystone_authtoken]
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = glance
+password = GLANCE_PASS
+[matchmaker_redis]
+[oslo_messaging_amqp]
+[oslo_messaging_kafka]
+[oslo_messaging_notifications]
+[oslo_messaging_rabbit]
+[oslo_messaging_zmq]
+[oslo_policy]
+[paste_deploy]
+flavor = keystone
+[profiler]
+EOF
+chmod 640 glance-registry.conf
+chown root:glance glance-registry.conf
+```
+
+Note: GLANCE_DBPASS là pass của user glance trong database, controller là IP manage của node controller, GLANCE_PASS là pass của user glance
+
+```sh
+su -s /bin/sh -c "glance-manage db_sync" glance
+systemctl enable openstack-glance-api.service openstack-glance-registry.service
+systemctl start openstack-glance-api.service openstack-glance-registry.service
+```
+
+### 5.2 Kiểm tra hoạt động của glance
+
+```sh
+source /root/admin-openrc
+```
+
+- Download source cirros
+```sh
+wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+```
+
+- Upload Image
+```sh
+openstack image create "cirros" --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public
+```
+
+- Xác nhận upload image
+```sh
+openstack image list
+```
+
+
+
+
+
+
+
+
+
+
+  
 
   
   
