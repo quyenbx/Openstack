@@ -240,7 +240,7 @@ cat >> keystone.conf << "EOF"
 [cors]
 [credential]
 [database]
-connection = mysql+pymysql://keystone:*KEYSTONE_DBPASS*@*10.10.10.206*/keystone
+connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@10.10.10.206/keystone
 [domain_config]
 [endpoint_filter]
 [endpoint_policy]
@@ -281,7 +281,7 @@ chmod 640 keystone.conf
 chown root:keystone keystone.conf
 ```
 
-Note: KEYSTONE_DBPASS là pass của user keystone trong database server
+Note: KEYSTONE_DBPASS là pass của user keystone trong database server, 10.10.10.206 là IP tương ứng của manager trên note controller
 
 ```sh
 su -s /bin/sh -c "keystone-manage db_sync" keystone
