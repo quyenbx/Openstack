@@ -125,7 +125,7 @@ systemctl start chronyd.service
   ```
 ### 3.4 Cài đặt các OpenStack packages
 
-- Trên node Controller chạy lệnh sau
+- Trên node Controller và node Compute chạy lệnh sau
 
 ```sh
 yum install centos-release-openstack-rocky -y
@@ -753,6 +753,15 @@ Note: Thay controller bằng IP manager của node controller
   systemctl start openstack-nova-api.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
   ```
   
+### 6.2. Cài đặt trên node compute
+- Cài đặt packages
+```sh
+yum install openstack-nova-compute -y
+```
+
+- Sửa file config nova.conf
+
+
   
   
    
