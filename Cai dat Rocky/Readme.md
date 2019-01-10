@@ -1,6 +1,35 @@
 ## Tài liệu cài đặt Openstack Rocky trên Centos 7 64-bit
 
 ## Mục Lục
+## 1. Mô Hình:
+## 2. IP Planning:
+## 3. Cài đặt môi trường :
+## 3.1 Cài đặt môi trường trên node controller:
+## 3.2 Cài đặt môi trường trên Node Compute 1:
+## 3.3 Cài đặt NTP
+## 3.4 Cài đặt các OpenStack packages
+## 3.5 Cài đật SQL database
+## 3.6 Message queue
+## 3.7 Cài đătj Memcached
+## 4. Cài đặt Identity Servvice - Keystone
+## 4.1 Chuẩn bị
+## 4.2 Cài đặt và cấu hình :
+## 5. Cài đặt Image Service - Glance
+## 5.1 Chuẩn bị
+## 5.1 Cài đặt và cấu hình
+## 5.2 Kiểm tra hoạt động của glance
+## 6. Cài đặt Compute service - Nova
+## 6.1. Cài đặt trên node controller
+## 6.2. Cài đặt trên node compute
+## 6.3 Kiểm tra hoạt động của Nova
+## 7. Cài đặt Network Service - Neutron
+## 7.1 Chuẩn bị trên node controller
+## 7.2 Cài đặt theo Self-service networks trên node controller
+## 7.3 Cài đặt theo Self-service networks trên node compute
+## 8. Cài đặt Dashboard
+## 8.1 Cài đặt và cấu hình trên node controller
+
+================================================================================
 
 ## 1. Mô Hình:
 - Mô hình cài đặt Lab OPS Rocky trên Centos 7 64-bit
