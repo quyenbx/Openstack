@@ -45,6 +45,7 @@
 
 ```sh
 yum update -y
+yum install crudini -y
 ```
 
 - Cấu hình Network
@@ -84,6 +85,7 @@ init 6
  
 ```sh
 yum update -y
+yum install crudini -y
 ```
 
 - Cấu hình Network
