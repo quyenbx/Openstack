@@ -59,6 +59,16 @@
   | .++.  ++..      |
   +----[SHA256]-----+
   ```
+ 
+ ### 5. Cách upload public lên server
+ - Ta có thể dùng cách thủ công để upload public key lên server bằng cách sử dụng phần mềm winscp, sử dụng SFTP, FTP ...
+ - Nếu không muốn sử dụng cách thủ công bạn có thể sử dụng lệnh copy key giữa 2 server linux như sau,Ví dụ nếu ta muốn copy Key từ server có IP là A lên server có IP là B thì ta ssh vào server A gà gõ lệnh 
+ ```sh
+ ssh-copy-id -i /root/.ssh/id_rsa.pub B
+ ```
+ Với B là địa chỉ IP của server B, sau đó hiển thị thông báo nhập password của server B, bạn nhập pass root ssh của server B để copy key hoàn thành nhé
+ 
+ 
   
   
 
