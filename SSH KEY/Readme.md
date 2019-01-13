@@ -25,10 +25,10 @@
   - Người dùng có thể sử dụng phần mềm PuTTY-Gen để tạo SSH key.Sau khi download phần mềm PuTTY-Gen về và cài đặt ta làm theo hướng dẫn như hình bên dưới
   
   ![](./images/1.png)
-  - Sau khi click vaof genarate bạn di chuyển chuột quanh màn hình để tạo key.Sau khi tạo key xong ta click vào Save private key như hình bên dưới để lưu lại private key được tạo ra
+  - Sau khi click vào genarate bạn di chuyển chuột quanh màn hình để tạo key.Sau khi tạo key xong ta click vào Save private key như hình bên dưới để lưu lại private key được tạo ra
   
   ![](./images/2.png)
-  - Sau đó ta lưu lại đoạn private key ra một file với nội dung copy đoạn mã như ảnh bên dưới
+  - Sau đó ta lưu lại đoạn public key ra một file với nội dung copy đoạn mã như ảnh bên dưới
   
   ![](./images/3.png)
   
