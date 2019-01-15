@@ -23,20 +23,91 @@
 
 ## 3. Các câu lệnh thường gặp:
 - Tạo mới 1 flavor
+```sh
+openstack flavor create --id auto --ram <dung lượng ram> --disk <dung lượng disk> --vcpu <số lượng cpu> --public <tên flavor>
+```
+Lưu ý: Đơn vị dung lượng Ram tính bằng MB và Disk tính bằng GB
 - Liệt kê flavors
+```sh
+openstack flavor list
+```
+
 - Hiển thị chi tiết một flavor
+```sh
+openstack flavor show <tên hoặc ID của flavor>
+```
+
 - Xóa bỏ 1 flavor
+```sh
+openstack flavor delete <name or id của flavor>
+```
+
 - Tạo keypair
+```sh
+openstack keypair create [--public-key <file> | --private-key <file>] <name>
+```
+
 - List tất cả các key pair có trong openstack
+```sh
+openstack keypair list
+```
+
 - Xóa bỏ 1 keypair
+```sh
+openstack keypair delete <tên keypair>
+```
+
 - Tạo máy ảo từ image
+```sh
+openstack server create --flavor <tên flavor> --image <tên image> --nic net-id=<id của network> --security-group <tên security group> --key-name <tên keypair> <tên vm>
+```
+
 - Tạo máy ảo từ volume
+```sh
+openstack server create --flavor <tên flavor> --volume <tên volume> --nic net-id=<id của network> --security-group <tên security group> --key-name <tên keypair> <tên vm>
+```
+
 - Xóa máy ảo
+```sh
+openstack server delete <tên VM>
+```
+
 - Tắt máy ảo
+```sh
+openstack server stop <tên VM>
+```
+
 - Bật máy ảo
+```sh
+openstack server start <tên VM>
+```
+
 - Reboot máy ảo
+```sh
+openstack server reboot <tên VM>
+```
+
 - List tất cả máy ảo
+```sh
+openstack server list
+```
+
 - Tạo mới snapshot
+```sh
+openstack snapshot create <tên snapshot> <tên máy ảo>
+```
+
 - Hiển thị danh sách các snapshot
+```sh
+openstack snapshot list
+```
+
 - Xóa snapshot
+```sh
+openstack snapshot delete <tên hoặc ID của snapshot>
+```
+
 - Xem danh sách các hypervisor
+```sh
+openstack hypervisor list
+```
