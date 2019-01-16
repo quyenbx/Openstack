@@ -1325,6 +1325,273 @@ yum install openstack-dashboard -y
   systemctl restart httpd.service memcached.service
   ```
   
+## 9. Cài đặt Block Storage service - Cinder
+
+### 9.1. Cài đặt trên node controller
+
+- Chuẩn bị
+  - Truy cập database
+  ```sh
+  mysql -u root -p
+  ```
+  
+  - Tạo cinder database
+  ```sh
+  CREATE DATABASE cinder;
+  GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'CINDER_DBPASS';
+  GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'CINDER_DBPASS';
+  FLUSH PRIVILEGES;
+  exit;
+  ```
+  
+  Note: Thay thế CINDER_DBPASS bằng pass của cinder trong database server
+  
+  - Khai báo hoạt động với môi trường admin
+  ```sh
+  source admin-openrc
+  ```
+  
+  - Tạo user cinder
+  ```sh
+  openstack user create --domain default --password-prompt cinder
+  ```
+  
+  - Gán quyền admin cho user cinder trong project service
+  ```sh
+  openstack role add --project service --user cinder admin
+  ```
+  
+  - Tạo service cinderv2 và cinderv3
+  ```sh
+  openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2
+  openstack service create --name cinderv3 --description "OpenStack Block Storage" volumev3
+  ```
+  
+  - Tạo Block Storage service API endpoints
+  ```sh
+  openstack endpoint create --region RegionOne volumev2 public http://controller:8776/v2/%\(project_id\)s
+  openstack endpoint create --region RegionOne volumev2 internal http://controller:8776/v2/%\(project_id\)s
+  openstack endpoint create --region RegionOne volumev2 admin http://controller:8776/v2/%\(project_id\)s
+  openstack endpoint create --region RegionOne volumev3 public http://controller:8776/v3/%\(project_id\)s
+  openstack endpoint create --region RegionOne volumev3 internal http://controller:8776/v3/%\(project_id\)s
+  openstack endpoint create --region RegionOne volumev3 admin http://controller:8776/v3/%\(project_id\)s
+  ```
+  
+  Note: Thay thế controller bằng IP manager của node controller
+  
+- Cài đặt và cấu hình các thành phần
+  - Cài đặt packages
+  ```sh
+  yum install openstack-cinder -y
+  ```
+  
+  - Sửa file /etc/cinder/cinder.conf
+  
+  ```sh
+  cd /etc/cinder/
+  mv cinder.conf cinder.conf.bak
+  cat >> cinder.conf << "EOF"
+  [DEFAULT]
+  transport_url = rabbit://openstack:RABBIT_PASS@controller
+  auth_strategy = keystone
+  my_ip = 10.0.0.11
+  [backend]
+  [backend_defaults]
+  [barbican]
+  [brcd_fabric_example]
+  [cisco_fabric_example]
+  [coordination]
+  [cors]
+  [database]
+  connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
+  [fc-zone-manager]
+  [healthcheck]
+  [key_manager]
+  [keystone_authtoken]
+  auth_uri = http://controller:5000
+  auth_url = http://controller:5000
+  memcached_servers = controller:11211
+  auth_type = password
+  project_domain_id = default
+  user_domain_id = default
+  project_name = service
+  username = cinder
+  password = CINDER_PASS
+  [matchmaker_redis]
+  [nova]
+  [oslo_concurrency]
+  lock_path = /var/lib/cinder/tmp
+  [oslo_messaging_amqp]
+  [oslo_messaging_kafka]
+  [oslo_messaging_notifications]
+  [oslo_messaging_rabbit]
+  [oslo_messaging_zmq]
+  [oslo_middleware]
+  [oslo_policy]
+  [oslo_reports]
+  [oslo_versionedobjects]
+  [profiler]
+  [sample_remote_file_source]
+  [service_user]
+  [ssl]
+  [vault]
+  EOF
+  chmod 640 cinder.conf
+  chown root:cinder cinder.conf
+  ```
+  
+  Note: Thay thế RABBIT_PASS với pass của rabbit, controller thay thế với IP manager của node controller, my_ip thay bằng IP manager của node controller, CINDER_PASS thay thế bằng pass của user cinder
+  
+  ```sh
+  su -s /bin/sh -c "cinder-manage db sync" cinder
+  ```
+  
+- Cấu hình compute sử dụng Block Storage
+  - Sửa file /etc/nova/nova.conf
+  ```sh
+  crudini --set /etc/nova/nova.conf cinder os_region_name  RegionOne
+  ```
+  
+- Restart Compute API service
+```sh
+systemctl restart openstack-nova-api.service
+```
+- Start Block Storage services và cấu hình service tự động start khi hệ thống bootstrap
+```sh
+systemctl enable openstack-cinder-api.service openstack-cinder-scheduler.service
+systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service
+```
+
+### 9.2 Cài đặt trong node Storage
+
+- Cài đặt các package bổ trợ
+  - Cài đặt NTP
+  ```sh
+  yum install chrony -y
+  sed -i 's/server 0.centos.pool.ntp.org iburst/#server 0.centos.pool.ntp.org iburst/g' /etc/chrony.conf
+  sed -i 's/server 1.centos.pool.ntp.org iburst/#server 1.centos.pool.ntp.org iburst/g' /etc/chrony.conf
+  sed -i 's/server 2.centos.pool.ntp.org iburst/#server 2.centos.pool.ntp.org iburst/g' /etc/chrony.conf
+  sed -i 's/server 3.centos.pool.ntp.org iburst/#server 3.centos.pool.ntp.org iburst/g' /etc/chrony.conf
+  echo "server 10.10.10.206 iburst" >> /etc/chrony.conf
+  systemctl enable chronyd.service
+  systemctl start chronyd.service
+  ```
+  - Chạy các lênh sau để cài đặt openstack package 
+  ```sh
+  yum install centos-release-openstack-rocky -y
+  yum upgrade -y
+  yum install python-openstackclient -y
+  yum install openstack-selinux -y
+  init 6
+  ```
+  - Cài đặt LVM packages
+  ```sh
+  yum install lvm2 device-mapper-persistent-data -y
+  ```
+  - Start LVM metadata service và cấu hình tự động start khi hệ thống bootstrap
+  ```sh
+  systemctl enable lvm2-lvmetad.service
+  systemctl start lvm2-lvmetad.service
+  ```
+  - Tạo LVM physical volume
+  ```sh
+  pvcreate /dev/sdb
+  ```
+  - Tạo LVM volume group cinder-volumes
+  ```sh
+  vgcreate cinder-volumes /dev/sdb
+  ```
+  - Cấu hình file /etc/lvm/lvm.conf
+  ```sh
+  
+- Cài đặt và cấu hình các thành phần
+  - Cài đặt các package
+  ```sh
+  yum install openstack-cinder targetcli python-keystone -y
+  ```
+  - Sửa file /etc/cinder/cinder.conf
+  ```sh
+  cd /etc/cinder/
+  mv cinder.conf cinder.conf.bak
+  cat >> cinder.conf << "EOF"
+  [DEFAULT]
+  transport_url = rabbit://openstack:RABBIT_PASS@controller
+  auth_strategy = keystone
+  my_ip = MANAGEMENT_INTERFACE_IP_ADDRESS
+  enabled_backends = lvm
+  glance_api_servers = http://controller:9292
+  [backend]
+  [backend_defaults]
+  [barbican]
+  [brcd_fabric_example]
+  [cisco_fabric_example]
+  [coordination]
+  [cors]
+  [database]
+  connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
+  [fc-zone-manager]
+  [healthcheck]
+  [key_manager]
+  [keystone_authtoken]
+  www_authenticate_uri = http://controller:5000
+  auth_url = http://controller:5000
+  memcached_servers = controller:11211
+  auth_type = password
+  project_domain_id = default
+  user_domain_id = default
+  project_name = service
+  username = cinder
+  password = CINDER_PASS
+  [matchmaker_redis]
+  [nova]
+  [oslo_concurrency]
+  lock_path = /var/lib/cinder/tmp
+  [oslo_messaging_amqp]
+  [oslo_messaging_kafka]
+  [oslo_messaging_notifications]
+  [oslo_messaging_rabbit]
+  [oslo_messaging_zmq]
+  [oslo_middleware]
+  [oslo_policy]
+  [oslo_reports]
+  [oslo_versionedobjects]
+  [profiler]
+  [sample_remote_file_source]
+  [service_user]
+  [ssl]
+  [vault]
+  [lvm]
+  volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
+  volume_group = cinder-volumes
+  iscsi_protocol = iscsi
+  iscsi_helper = lioadm
+  EOF
+  chmod 640 cinder.conf
+  chown root:cinder cinder.conf
+  ```
+  
+  Note: Thay thế CINDER_DBPASS bằng pass của user cinder trong database server, controller thay bằng IP manager của node controller, RABBIT_PASS thay bằng pass của rabbit, CINDER_PASS thay bằng pass của user cinder, MANAGEMENT_INTERFACE_IP_ADDRESS thay bằng IP manager của node storage, 
+  
+  - Start service và cấu hình auto start khi hệ thống bootstrap
+  ```sh
+  systemctl enable openstack-cinder-volume.service target.service
+  systemctl start openstack-cinder-volume.service target.service
+  ```
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
