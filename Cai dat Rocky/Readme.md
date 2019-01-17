@@ -127,10 +127,10 @@ init 6
 
 ```sh
 yum install chrony -y
-sed -i 's/0.centos.pool.ntp.org/0.asia.pool.ntp.org/g' /etc/chrony.conf
-sed -i 's/1.centos.pool.ntp.org/1.asia.pool.ntp.org/g' /etc/chrony.conf
-sed -i 's/2.centos.pool.ntp.org/2.asia.pool.ntp.org/g' /etc/chrony.conf
-sed -i 's/3.centos.pool.ntp.org/3.asia.pool.ntp.org/g' /etc/chrony.conf
+sed -i 's/0.centos.pool.ntp.org/#0.asia.pool.ntp.org/g' /etc/chrony.conf
+sed -i 's/1.centos.pool.ntp.org/#1.asia.pool.ntp.org/g' /etc/chrony.conf
+sed -i 's/2.centos.pool.ntp.org/#2.asia.pool.ntp.org/g' /etc/chrony.conf
+sed -i 's/3.centos.pool.ntp.org/#3.asia.pool.ntp.org/g' /etc/chrony.conf
 echo "allow 10.10.10.0/24" >> /etc/chrony.conf
 systemctl enable chronyd.service
 systemctl start chronyd.service
