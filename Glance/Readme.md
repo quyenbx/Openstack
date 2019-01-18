@@ -46,3 +46,13 @@
 | AMI, ARI, AKI  | Định dạng ảnh Amazon machine, ramdisk, kernel |												 
 
 - Định dạng Container Formats: mô tả định dạng files và chứa các thông tin metadata về máy ảo
+
+| Container format | Notes |
+|------------------|-------|
+| bare | Định dạng xác định không có container hoặc metadata đóng gói cho image |
+| ovf | Định dạng container OVF |
+| aki | Xác định lưu trữ trong Glance là Amazon kernel image |
+| ari | Xác định lưu trữ trong Glance là Amazon ramdisk image |
+| ami | Xác định lưu trữ trong Glance là Amazon machine image |
+| ova | Xác định lưu trữ trong Glance là file lưu trữ OVA |
+| docker | Xác định lưu trữ trong Glance và file lưu trữ Docker |
