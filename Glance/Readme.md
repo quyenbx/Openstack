@@ -35,7 +35,8 @@
 ## 5. Các dịnh dạng Image của Glance
 - Định dạng Disk Formats: Định dạng cơ bản của Disk
 
-| * Disk Format* |                           *Note*                                                              |
+| Disk Format | Note |
+|-------------|------|
 | Raw | Định dạng đĩa phi cấu trúc |
 | VHD | Định dạng chung hỗ trợ bởi nhiều công nghệ ảo hóa trong OpenStack, ngoại trừ KVM |             
 | VMDK | Định dạng hỗ trợ bởi VMWare |																 
