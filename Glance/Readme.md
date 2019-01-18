@@ -35,13 +35,13 @@
 ## 5. Các dịnh dạng Image của Glance
 - Định dạng Disk Formats: Định dạng cơ bản của Disk
 
-| * Disk Format* |                           *Note*                                 |
+| * Disk Format* |                           *Note*                                                              |
 | Raw            | Định dạng đĩa phi cấu trúc
-| VHD            | Định dạng chung hỗ trợ bởi nhiều công nghệ ảo hóa trong OpenStack, ngoại trừ KVM
-| VMDK           | Định dạng hỗ trợ bởi VMWare
-| qcow2          | Định dạng đĩa QEMU, định dạng mặc định hỗ trợ bởi KVM vfa QEMU, hỗ trợ các chức năng nâng cao
-| VDI            | Định dạng ảnh đĩa ảo hỗ trợ bởi VirtualBox
-| ISO            | Định dạng lưu trữ cho đĩa quang
-| AMI, ARI, AKI  | Định dạng ảnh Amazon machine, ramdisk, kernel
+| VHD            | Định dạng chung hỗ trợ bởi nhiều công nghệ ảo hóa trong OpenStack, ngoại trừ KVM              | 
+| VMDK           | Định dạng hỗ trợ bởi VMWare																	 |
+| qcow2          | Định dạng đĩa QEMU, định dạng mặc định hỗ trợ bởi KVM vfa QEMU, hỗ trợ các chức năng nâng cao |
+| VDI            | Định dạng ảnh đĩa ảo hỗ trợ bởi VirtualBox													 |
+| ISO            | Định dạng lưu trữ cho đĩa quang																 |
+| AMI, ARI, AKI  | Định dạng ảnh Amazon machine, ramdisk, kernel												 |
 
 - Định dạng Container Formats: mô tả định dạng files và chứa các thông tin metadata về máy ảo
