@@ -1,10 +1,10 @@
 ## Muc Luc
 ### [1. Khái niệm KeyStone](#keystone)<br>
-### 2. Các thành phần trong KeyStone
-### 3. Các định dạng của Tokens
-### 4. KeyStone Workflow
-### 5. KeyStone User Management
-### 6. KeyStone Service Management
+### [2. Các thành phần trong KeyStone](#cackhainiem)<br>
+### [3. Các định dạng của Tokens](#cacdinhdang)<br>
+### [4. KeyStone Workflow](#workflow)<br>
+### [5. KeyStone User Management](#usermanagement)<br>
+### [6. KeyStone Service Management](#servicemanagement)<br>
 
 ============================================================================
 
@@ -15,6 +15,7 @@ Hai tính năng chính của Keystone:
 - User Management: keystone xác thực tài khoản người dùng và chỉ định xem người dùng có quyền được làm gì
 - Service Catalog: Cung cấp một danh mục các dịch vụ sẵn sàng cùng với các API endpoints để truy cập các dịch vụ đó
 
+<a name=cackhainiem></a>
 ### 2. Các khái niệm trong KeyStone
 Keystone cung cấp các dịch vụ chính như sau:
 - Project:
@@ -45,6 +46,7 @@ Mỗi dịch vụ lại được cấu hình để sử dụng một backend cho
 - LDAP Backend: LDAP là hệ thống lưu trữ các user và project trong các subtree tách biệt nhau.
 - Multiple Backend: sử dụng kết hợp nhiều hệ thống Backend, trong đó SQL lưu trữ các service account (tài khoản của các dịch vụ như: nova glance, etc.), còn LDAP sử dụng lưu trữ thông tin người dùng, etc.
 
+<a name="cacdinhdang"></a>
 ### 3. Các định dạng của Tokens
 - Token có các định dạng sau
   - UUID
@@ -52,6 +54,7 @@ Mỗi dịch vụ lại được cấu hình để sử dụng một backend cho
   - PKIZ
   - Fernet
 
+<a name="workflow"></a>
 ### 4. KeyStone Workflow
 - Sơ đồ tương tác đơn giản giữa người dùng và các service trong openstack
 
@@ -59,12 +62,14 @@ Mỗi dịch vụ lại được cấu hình để sử dụng một backend cho
 
 ![](./images/user-service1.png)
 
+<a name="usermanagement"></a>
 ### 5. KeyStone User Management
 Keystone quản lý các user, project(tenants), roles, chịu trách nhiệm xác thực và ấn định quyền truy cập các tài nguyên trong hệ thống. Có ba khái niệm chính trong tính năng User Management:
 - User: là tải khoản của người sử dụng dịch vụ, bao gồm một số thông tin như: username, password, email
 - Project(tenant): khái niệm liên quan tới việc gộp, cô lập các nguồn tài nguyên. Tự các project không hề có user. Người dùng được gán roles đối với mỗi project, quy định quyền truy cập tài nguyên trong project.
 - Roles: chỉ định các thao tác vận hành hệ thống được phép thực hiện, tài nguyên mà người dùng được phép sử dụng.
 
+<a name="servicemanagement"></a>
 ### 6. KeyStone Service Management
 Keystone cũng cung cấp danh mục các dịch vụ cùng với các API endpoints để truy cập các dịch vụ đó. Có hai khái niệm chính trong tính năng "service management":
 - Services: các dịch vụ khác trong OpenStack sẽ có tài khoản tương ứng (thường có có tên tài khoản trùng code name của dịch vụ như nova, glance, etc.). Các tài khoản này thuộc domain đặc biệt tên là service.
