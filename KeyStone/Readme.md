@@ -1,5 +1,5 @@
 ## Muc Luc
-### 1. Khái niệm KeyStone 
+### [1. Khái niệm KeyStone](#keystone)<br>
 ### 2. Các thành phần trong KeyStone
 ### 3. Các định dạng của Tokens
 ### 4. KeyStone Workflow
@@ -8,6 +8,7 @@
 
 ============================================================================
 
+<a name=keystone></a>
 ### 1. Khái niệm KeyStone
 Keystone là OpenStack project cung cấp các dịch vụ Identity, Token, Catalog, Policy cho các project khác trong OpenStack. Nó triển khai Identity API của OpenStack
 Hai tính năng chính của Keystone:
