@@ -30,6 +30,7 @@
 - GoodnessWeigher : Gán trọng số dựa vào goodness function.
 
 `
+
 0 -- host is a poor choice
 .
 .
@@ -37,4 +38,5 @@
 .
 .
 100 -- host is a perfect choice
+
 `
