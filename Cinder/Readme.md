@@ -9,6 +9,7 @@
 ### [2.1 Kiến trúc của Cinder](kientruc1)<br>
 ### [2.2 Các thành phần](#thanhphan)<br>
 ### [3. Các phương thức tạo máy ảo trên hệ quy chiếu cinder](#phuongthuc)<br>
+
 <a name="gioithieu"</a>
 ## 1. Giới thiệu về cinder
 
