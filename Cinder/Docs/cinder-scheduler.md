@@ -28,15 +28,7 @@
 - CapacityWeigher : Trạng thái công suất thực tế chưa được sử dụng.
 - ChanceWeigher : Tính trọng số random, dùng để tạo các volume khi các host gần giống nhau
 - GoodnessWeigher : Gán trọng số dựa vào goodness function.
+  - 0 -- host is a poor choice
+  - 50 -- host is a good choice
+  - 100 -- host is a perfect choice
 
-`
-
-0 -- host is a poor choice
-.
-.
-50 -- host is a good choice
-.
-.
-100 -- host is a perfect choice
-
-`
