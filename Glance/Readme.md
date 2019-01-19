@@ -31,7 +31,7 @@
 - Yêu cầu từ client được tiếp nhận thông qua REST API và đợi sự xác thực của Keystone. Keystone Domain controller quản lý tất cả các tác vụ vận hành bên trong. Các tác vụ này chia thành các lớp, mỗi lớp triển khai nhiệm vụ vụ riêng của chúng.
 - Glance store driver là lớp giao tiếp giữa glane và các hệ thống backend bên ngoài hoặc hệ thống tệp tin cục bộ, cung cấp giao diện chung để truy cập. Glance sử dụng SQL Database làm điểm truy cập cho các thành phần khác trong hệ thống.
 
-![](../images/kientruc.png)
+![](./images/kientruc.png)
 
 - Glance tiếp nhận các API request yêu cầu images từ người dùng cuối hoặc các nova component và có thể ưu trữ các file images trong hệ thống object storage Swift hoặc các storage repos khác
 - Glance hỗ trợ các hệ thống backend lưu trữ sau:
