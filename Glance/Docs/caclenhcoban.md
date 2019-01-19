@@ -4,7 +4,7 @@
 `openstack image list`
 
 - Hiển thị chi tiết một image: 
-`openstack image show <tên hoặc ID của Image>'
+`openstack image show <tên hoặc ID của Image>`
 
 - Tạo image
 ```sh
