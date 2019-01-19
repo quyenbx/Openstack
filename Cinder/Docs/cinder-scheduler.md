@@ -31,4 +31,6 @@
   - 0 -- host is a poor choice
   - 50 -- host is a good choice
   - 100 -- host is a perfect choice
+- VolumeNumberWeigher : Tính trọng số theo số lượng volume đang có
+
 
