@@ -10,7 +10,7 @@
 ### [2.2 Các thành phần](#thanhphan)<br>
 ### [3. Các phương thức tạo máy ảo trên hệ quy chiếu cinder](#phuongthuc)<br>
 
-<a name="gioithieu"</a>
+<a name="gioithieu"></a>
 ## 1. Giới thiệu về cinder
 
 <a name="khainiem"></a>
