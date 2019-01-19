@@ -2,13 +2,23 @@
 
 ## Mục lục
 
+### [1. Giới thiệu về cinder](#gioithieu)<br>
+### [1.1 Khái niệm](#khainiem)<br>
+### [1.2 Các chức năng](#chucnang)<br>
+### [2. Kiến trúc của Cinder](#kientruc)<br>
+### [2.1 Kiến trúc của Cinder](kientruc1)<br>
+### [2.2 Các thành phần](#thanhphan)<br>
+### [3. Các phương thức tạo máy ảo trên hệ quy chiếu cinder](#phuongthuc)<br>
+<a name="gioithieu"</a>
 ## 1. Giới thiệu về cinder
 
+<a name="khainiem"></a>
 ### 1.1 Khái niệm:
 
 - Cinder là dịch vụ Block Storage trong Openstack. Nó được thiết kế để người dùng cuối có thể thực hiện việc lưu trữ bởi Nova, việc này được thực hiện bởi LVM hoặc các plugin driver cho các nền tảng lưu trữ khác
 - Cinder ảo hóa việc quản lý các thiết bị block storage và cung cấp cho người dùng cuối một API đáp ứng được nhu cầu tự phục vụ cũng như tiêu thụ các tài nguyên đó mà không cần biết quá nhiều kiến thức chuyên sâu
 
+<a name="chucnang"></a>
 ### 1.2 Các chức năng
 
 - Cung cấp và quản lý các tài nguyên lưu trữ dạng persistent block storage (volume) cho các máy ảo
@@ -18,8 +28,10 @@
 - Phân chia tài nguyên lưu trữ thành các khối gọi là Cinder volume
 - Cung cấp các API như là tạo, xóa, backup, restore, tạo snapshot, clone volume ... Những API này thực hiện bởi các backend lưu trữ mà được cinder hỗ trợ
 
+<a name="kientruc"></a>
 ## 2. Kiến trúc của Cinder
 
+<a name="kientruc1"></a>
 ### 2.1 Kiến trúc của Cinder
 
 ![](./images/1.png)
@@ -32,7 +44,8 @@
 - RabbitMQ server : cung cấp hàng chờ tin nhắn AMQP, RabbitMQ làm việc với các các Openstack Copoment khác : hàng chờ, phân phối,, quản lý, bảo mật liên kết
 - Database : lưu thạng trái các volume
 
-### 2.3 Các thành phần:
+<a name="thanhphan"></a>
+### 2.2 Các thành phần:
 
 - Back-end Storage Device : Dịch vụ Block Storage yêu cầu một vài kiểu của back-end storage mà dịch vụ có thể chạy trên đó. Mặc định là sử dụng LVM trên một local volume group tên là "cinder-volumes"
 - User và Project : Cinder được dùng bởi các người dùng hoặc khách hàng khác nhau (project trong một shared system), sử dụng chỉ định truy cập dưa vào role (role-based access). Các role kiểm soát các hành động mà người dùng được phép thực hiện. Trong cấu hình mặc định, phần lớn các hành động không yêu cầu một role cụ thể, nhưng sysad có thể cấu hình trong file policy.json để quản lý các rule. Một truy cập của người dùng có thể bị hạn chế bởi project, nhưng username và pass được gán chỉ định cho mỗi user. Key pairs cho phép truy cập tới một volume được mở cho mỗi user, nhưng hạn ngạch để kiểm soát sự tiêu thu tài nguyên trên các tài nguyên phần cứng có sẵn là cho mỗi project
@@ -41,6 +54,7 @@
   - Snapshot : Một bản copy trong một thời điểm nhất định của một volume. Snapshot có thể được tạo từ một volume mà mới được dùng gần đây trong trạng thái sẵn sàng. Snapshot có thể được dùng để tạo một volume mới thông qua việc tạo từ snapshot
   - Backup : Một bản copy lưu trữ của một volume thông thường được lưu ở Swift
   
+<a name="phuongthuc"></a>
 ## 3. Các phương thức tạo máy ảo trên hệ quy chiếu cinder
 
 - Image : Tạo một ephameral disk từ image đã chọn
