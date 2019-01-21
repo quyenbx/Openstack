@@ -92,11 +92,6 @@ openstack server reboot <tên VM>
 openstack server list
 ```
 
-- Tạo mới snapshot
-```sh
-openstack snapshot create <tên snapshot> <tên máy ảo>
-```
-
 - Hiển thị danh sách các snapshot
 ```sh
 openstack snapshot list
