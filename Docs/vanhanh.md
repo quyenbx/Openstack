@@ -57,5 +57,35 @@ Note: Trong đó name_flavor là tên flavor mới, id_vm là ID của VM muốn
   ```
   Note: id-port-vm là id port của VM cần add thêm IP, ipaddress là IP của port mới tạo
   
-  
+- Migrate VM
+  - Cold-Migrate
+    - Stop VM
+	- Migrate với lệnh bên dưới
+	```sh
+	openstack server migrate <id_vm>
+	```
+  Note: id_vm là IP của VM cần migrate
+    - Confirm để chuyển trạng thái VM
+	```sh
+	openstack server resize --confirm <id_vm>
+	```
+	
+  - Live-Migrate
+    - Chỉnh sửa libvirt trong note Compute
+	```sh
+	cp /etc/libvirt/libvirtd.conf /etc/libvirt/libvirtd.conf.bak
+    sed -i 's|#listen_tls = 0|listen_tls = 0|'g /etc/libvirt/libvirtd.conf
+    sed -i 's|#listen_tcp = 1|listen_tcp = 1|'g /etc/libvirt/libvirtd.conf
+    sed -i 's|#tcp_port = "16509"|tcp_port = "16509"|'g /etc/libvirt/libvirtd.conf
+    sed -i 's|#auth_tcp = "sasl"|auth_tcp = "none"|'g /etc/libvirt/libvirtd.conf
+    cp /etc/sysconfig/libvirtd /etc/sysconfig/libvirtd.orig 
+    sed -i 's|#LIBVIRTD_ARGS="--listen"|LIBVIRTD_ARGS="--listen"|'g /etc/sysconfig/libvirtd
+	```
+	- Migrate
+	```sh
+	openstack server migrate --live <Hostname node compute moi> <ID VM se Migrate>
+	```
+	
+
+
   
